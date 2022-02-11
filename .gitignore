@@ -60,8 +60,7 @@ typings/
 # next.js build output
 .next
 
-# compiled output
-/dist
+# compiler output
 /tmp
 /out-tsc
 # Only exists if Bazel was run

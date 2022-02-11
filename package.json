@@ -4,12 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./serve-olp2",
-    "dev": "nodemon -r dotenv/config ./serve-olp2",
-    "ng": "ng",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "dev": "nodemon -r dotenv/config ./serve-olp2"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
