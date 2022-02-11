@@ -1,0 +1,19 @@
+<header>
+  <olp-portrait-app-bar [title]="song.title" [songId]=song._id></olp-portrait-app-bar>
+</header>
+<main class="mdc-top-app-bar--fixed-adjust">
+  <div>
+    <div style="margin: 1em" *ngFor="let stanza of song.lyrics">
+      <div style="text-transform:uppercase">{{stanza.type}}</div>
+      <div *ngFor="let line of stanza.text.split('/')">
+        {{line | trimLyrics}}
+      </div>
+      <div *ngIf="stanza.number < 2" style="padding-top: 1em">{{getChords(stanza.type) | trimChords}}</div>
+    </div>
+  </div>
+  <div style="position: fixed; bottom: 24px; left: 50%;">
+    <a style="margin-left: -50%;" mat-fab class="mdc-fab" routerLink="/cue/{{song._id}}">
+      <mat-icon style="font-size: 56px;" class="mdc-fab__icon">play_circle</mat-icon>
+    </a>
+  </div>
+</main>

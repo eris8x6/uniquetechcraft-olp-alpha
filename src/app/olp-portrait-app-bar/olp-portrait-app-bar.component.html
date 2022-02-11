@@ -1,0 +1,26 @@
+<div class="mdc-top-app-bar">
+  <div class="mdc-top-app-bar__row">
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+      <button *ngIf="songViewP();" class="mdc-top-app-bar__navigation-icon mdc-icon-button" aria-label="Eject song from cuer">
+        <a class="material-icons" style="text-decoration: none;" routerLink="/">
+          eject
+        </a>
+      </button>
+      <span>&nbsp;</span>
+    </section>
+    <span style="font-size: large;" class="mdc-top-app-bar__section">
+      {{title}}
+    </span>
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end olp-center" role="toolbar">
+      <button *ngIf="songViewP();" class="mdc-top-app-bar__action-item mdc-icon-button">
+        <a class="material-icons" style="text-decoration: none;" routerLink="/cue/{{songId}}">
+          play_arrow
+        </a>
+      </button>
+      <button *ngIf="false" class="material-icons mdc-top-app-bar__action-item mdc-icon-button">
+        <!--*ngIf="!songViewP();"-->
+        search
+      </button>
+    </section>
+  </div>
+</div>

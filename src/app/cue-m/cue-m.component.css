@@ -1,0 +1,18 @@
+.line {
+  padding-bottom: 16px;
+  display: inline-grid;
+}
+
+.line .chord
+{
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.line .lyric {
+  font-size: 36px;
+}
+
+.line .lyric2 {
+  font-size: 12px;
+}

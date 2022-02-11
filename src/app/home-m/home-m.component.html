@@ -1,0 +1,23 @@
+<header>
+  <olp-portrait-app-bar [title]="appBarTitle" [songId]=""></olp-portrait-app-bar>
+</header>
+<main class="mdc-top-app-bar--fixed-adjust">
+  <!--<form ngSubmit="sendSearch()">
+    <mat-form-field appearance="outline">
+      <input matInput name="searchKey" [(ngModel)]="searchKey" type="search" />
+      <button mat-button name="searchButton" matSuffix mat-icon-button aria-label="Search" (click)="sendSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>-->
+  <ul>
+    <li *ngFor="let song of songs">
+      <a routerLink="/song/{{song._id}}">
+        <span class="browse-title">
+          {{song.title}}
+        </span>
+      </a>
+    </li>
+  </ul>
+</main>
+

@@ -1,0 +1,39 @@
+<main #cueView style="background-color: #FFFFFF;">
+  <div style="background-color: #FFFFFF; height: 100%; width: 100%">
+    <div style="display: inline-block;">
+      <h1 *ngIf="cueSheetData.err">ERROR!</h1>
+      <!--margin-right: 56px;-->
+      <div style="display: inline-block;">
+        <div *ngFor="let staff of currentStaves">
+          <div class="line" style="grid-template-columns: repeat({{staffBars(staff)}}, auto);">
+            <!--class="chord"-->
+            <div style="font-size: 24px; font-weight: bold;" *ngFor="let chord of staff.chordLine">
+              {{chord | trimChords}}
+            </div>
+            <!--class="lyric"-->
+            <div style="font-size: 28px;" *ngFor="let word of staff.lyricLine">
+              {{word}} <span *ngIf="word.slice(-1) != '-'">&nbsp;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="width: 56px; display: inline-block; position: absolute; bottom: 0px; right: 0px; color: #BF009F;">
+      <button *ngIf="!fullScreen" (click)="enterFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen</button>
+      <button *ngIf="fullScreen" (click)="leaveFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen_exit</button>
+      <button class="mdc-icon-button" (click)="leaveFullScreen();" style="display: block;">
+
+        <!--TODO - following needs to use routerLink: routerLink="./song/{{songId}}" -->
+          <a style="text-decoration: none; color: inherit; fill: inherit;" class="material-icons" routerLink="/song/{{songId}}">
+            stop
+          </a>
+        </button>
+        <button (click)="skipBackward();" class="material-icons mdc-icon-button" style="display: block;">fast_rewind</button>
+        <button (click)="togglePlaying();" class="material-icons mdc-icon-button" style="display: block;">
+          <span *ngIf="!playing">play_arrow</span>
+          <span *ngIf="playing">pause</span>
+        </button>
+        <button (click)="skipForward();" class="material-icons mdc-icon-button" style="display: block;">fast_forward</button>
+      </div>
+    </div>
+  </main>
