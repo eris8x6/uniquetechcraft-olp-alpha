@@ -111,132 +111,139 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  private extractCueSheetData(songData) {
-    this.cueSheetData = { title: songData.title, composer: songData.composer, key: songData.key, err: null };
+    private extractCueSheetData(songData) {
+        this.cueSheetData = { title: songData.title, composer: songData.composer, key: songData.key, err: null };
 
-    // TODO Correct existing test data errors
-    // TODO Add new (simpler) test data
-    // TODO Complete existing test data
+        // TODO Correct existing test data errors
+        // TODO Add new (simpler) test data
+        // TODO Complete existing test data
 
-    const lyricStanzas = new Array();
-    for (var lyricStanza of songData.lyrics) {
-      const lyricLines = lyricStanza.text.split('/');
-      const lyrics = lyricLines.map((val, inx, arry) => { return val.split('^'); });
-      lyricStanzas.push({
-        lyricLines: lyrics,
-        type: lyricStanza.type,
-        number: lyricStanza.number
-      });
-    }
+        const lyricStanzas = new Array();
+        for (var lyricStanza of songData.lyrics) {
+            const lyricLines = lyricStanza.text.split('/');
+            const lyrics = lyricLines.map((val, inx, arry) => { return val.split('^'); });
+            lyricStanzas.push({
+                lyricLines: lyrics,
+                type: lyricStanza.type,
+                number: lyricStanza.number
+            });
+        }
 
-    console.log("Unpacked lyrics to stanzas, count is", lyricStanzas.length);
+        console.log("Unpacked lyrics to stanzas, count is", lyricStanzas.length);
 
-    const chordStanzas = new Array();
-    for (var chordStanza of songData.chords) {
-      const chordLines = chordStanza.value.split('/');
-      const chords = chordLines.map((val, inx, arry) => {
-        var chordLine;
-        if (val.substr(0, 1) === '|') {
-          const copyPos = Number.parseInt(val.substring(1));
-          chordLine = arry[copyPos - 1];
+        const chordStanzas = new Array();
+        for (var chordStanza of songData.chords) {
+            const chordLines = chordStanza.value.split('/');
+            const chords = chordLines.map((val, inx, arry) => {
+                var chordLine;
+                if (val.substr(0, 1) === '|') {
+                    const copyPos = Number.parseInt(val.substring(1));
+                    chordLine = arry[copyPos - 1];
+                }
+                else {
+                    chordLine = val;
+                }
+                return chordLine.split(' ');
+            });
+            chordStanzas.push({
+                chordLines: chords,
+                type: chordStanza.type,
+                number: chordStanza.number
+            });
+        }
+
+        console.log("Unpacked chords to stanzas, count is", chordStanzas.length);
+
+        let arrangement;
+        if (songData.arrangement) {
+            arrangement = songData.arrangement;
         }
         else {
-          chordLine = val;
+            // Verify lyrics
+            let verseCount = 0;
+            let chorusCount = 0;
+            let chorusNumber = null;
+            let otherCount = 0;
+            for (let stanza of lyricStanzas) {
+                switch (stanza.type) {
+                    case "verse":
+                        verseCount++;
+                        break;
+                    case "chorus":
+                        chorusCount++;
+                        chorusNumber = stanza.number;
+                        break;
+                    default:
+                        otherCount++;
+                }
+            }
+            if (otherCount > 0 || verseCount == 0 || chorusCount == 0 || chorusCount > 1) {
+                // Throw error
+                this.cueSheetData.err = true;
+                return;
+            }
+
+            // Verify chords
+            let verseChords = -1;
+            let chorusChords = -1;
+            let otherChords = false;
+            for (let stanza of chordStanzas) {
+                switch (stanza.type) {
+                    case "verse":
+                        verseChords = stanza.number;
+                        break;
+                    case "chorus":
+                        chorusChords = stanza.number;
+                        break;
+                    default:
+                        otherChords = true;
+                }
+            }
+            if (verseChords == -1 || chorusChords == -1 || otherChords) {
+                // Throw error
+                this.cueSheetData.err = true;
+                return;
+            }
+
+            // Generate default arrangement
+            arrangement = new Array();
+            for (let stanza of lyricStanzas) {
+                if (stanza.type === "verse") {
+                    let verseArr = {
+                        type: "verse",
+                        lyricNumber: stanza.number,
+                        chordNumber: verseChords
+                    };
+                    arrangement.push(verseArr);
+                    let chorusArr = {
+                        type: "chorus",
+                        lyricNumber: chorusNumber,
+                        chordNumber: chorusChords
+                    };
+                    arrangement.push(chorusArr);
+                }
+            }
         }
-        return chordLine.split(' ');
-      });
-      chordStanzas.push({
-        chordLines: chords,
-        type: chordStanza.type
-      });
-    }
 
-    console.log("Unpacked chords to stanzas, count is", chordStanzas.length);
-
-    let arrangement;
-    if (songData.arrangement) {
-      arrangement = songData.arrangement;
-    }
-    else {
-      // Verify lyrics
-      let verseCount = 0;
-      let chorusCount = 0;
-      let chorusNumber = null;
-      let otherCount = 0;
-      for (let stanza of lyricStanzas) {
-        switch (stanza.type) {
-          case "verse":
-            verseCount++;
-            break;
-          case "chorus":
-            chorusCount++;
-            chorusNumber = stanza.number;
-            break;
-          default:
-            otherCount++;
-        }
-      }
-      if (otherCount > 0 || verseCount == 0 || chorusCount == 0 || chorusCount > 1) {
-        // Throw error
-        this.cueSheetData.err = true;
-        return;
-      }
-
-      // Verify chords
-      let verseChords = -1;
-      let chorusChords = -1;
-      let otherChords = false;
-      for (let stanza of chordStanzas) {
-        switch (stanza.type) {
-          case "verse":
-            verseChords = stanza.number;
-            break;
-          case "chorus":
-            chorusChords = stanza.number;
-            break;
-          default:
-            otherChords = true;
-        }
-      }
-      if (verseChords == -1 || chorusChords == -1 || otherChords) {
-        // Throw error
-        this.cueSheetData.err = true;
-        return;
-      }
-
-      // Generate default arrangement
-      arrangement = new Array();
-      for (let stanza of lyricStanzas) {
-        if (stanza.type === "verse") {
-          let verseArr = {
-            type: "verse",
-            lyricNumber: stanza.number,
-            chordNumber: verseChords
-          };
-          arrangement.push(verseArr);
-          let chorusArr = {
-            type: "chorus",
-            lyricNumber: chorusNumber,
-            chordNumber: chorusChords
-          };
-          arrangement.push(chorusArr);
-        }
-      }
-    }
-
-    var staves = new Array();
-    console.log("Making cuesheet staves for arrangement stanzas, count", arrangement.length);
-    for (var cueStanza of arrangement) {
-      let stzLyricLines = null;
-      let stzChordLines = null;
-      for (let lyrStanza of lyricStanzas) {
-        if (lyrStanza.type === cueStanza.type && lyrStanza.number === cueStanza.lyricNumber) stzLyricLines = lyrStanza.lyricLines;
-      }
-      for (let chdStanza of chordStanzas) {
-       if (chdStanza.type == cueStanza.type &&
-            (chdStanza.number === cueStanza.chordNumber ||
-            cueStanza.chordNumber === 1 && !chordStanza.number)) stzChordLines = chdStanza.chordLines;
-      }
+        var staves = new Array();
+        console.log("Making cuesheet staves for arrangement stanzas, count", arrangement.length);
+        for (var cueStanza of arrangement) {
+            console.log("Staves for arr stanza ", cueStanza);
+            let stzLyricLines = null;
+            let stzChordLines = null;
+            for (let lyrStanza of lyricStanzas) {
+                if (lyrStanza.type === cueStanza.type && lyrStanza.number === cueStanza.lyricNumber) stzLyricLines = lyrStanza.lyricLines;
+            }
+            if (!stzLyricLines) console.log("No lyric lines for cueStanza", cueStanza);
+            for (let chdStanza of chordStanzas) {
+                console.log("Matching chord stanza", chdStanza);
+                if (chdStanza.type == cueStanza.type &&
+                    (chdStanza.number === cueStanza.chordNumber ||
+                        cueStanza.chordNumber === 1 && !chordStanza.number)) {
+                    stzChordLines = chdStanza.chordLines;
+                }
+            }
+            if (!stzChordLines) console.log("No chord lines for cueStanza", cueStanza);
       // Catch error if either is not set
       stzLyricLines.forEach((val, inx, arry) => {
 

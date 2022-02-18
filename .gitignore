@@ -63,6 +63,8 @@ typings/
 # compiler output
 /tmp
 /out-tsc
+/dist/out-tsc
+/obj/Debug
 # Only exists if Bazel was run
 /bazel-out
 
@@ -101,3 +103,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/dist/out-tsc
+/obj/Debug
+/bin/Microsoft.NodejsTools.WebRole.dll
