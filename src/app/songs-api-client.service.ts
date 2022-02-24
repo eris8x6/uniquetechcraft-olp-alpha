@@ -24,7 +24,7 @@ export class SongsApiClientService {
       .catch(this.handleError);
   }
 
-  public getSongData(id: string): Promise<any[]> {
+  public getSongData(id: string): Promise<any> {
     const url: string = `/api/song/${id}`;
     return this.http
       .get(url).toPromise()

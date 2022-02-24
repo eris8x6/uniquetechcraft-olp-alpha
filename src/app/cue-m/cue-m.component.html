@@ -19,6 +19,10 @@
       </div>
     </div>
     <div style="width: 56px; display: inline-block; position: absolute; bottom: 0px; right: 0px; color: #BF009F;">
+      <div>
+          <span>Tempo: </span>
+          <input type="number" [(ngModel)]="tempo">
+      </div>
       <button *ngIf="!fullScreen" (click)="enterFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen</button>
       <button *ngIf="fullScreen" (click)="leaveFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen_exit</button>
       <button class="mdc-icon-button" (click)="leaveFullScreen();" style="display: block;">

@@ -23,8 +23,10 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playing: boolean = false;
   fullScreen: boolean = false;
+  tempo: number = 120.0;
+    
+  private beatsPerStaff: number = 16; // Arbitrary default
   private currentLine: number = 0;
-  private playSpeed: number = 1.0; // For testing; default should be 1.0
   private playTimer: Observable<number>;
   private playSubscription: Subscription;
 
@@ -93,8 +95,8 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.playing && (this.currentLine + 3 < this.cueSheetData.staves.length)) this.playLine();
   }
 
-  private playLine() {
-    var lineTime = 1000.0 * this.cueSheetData.staves[this.currentLine].chordLine.length / this.playSpeed;
+    private playLine() {
+    var lineTime = 60000.0 * this.beatsPerStaff / this.tempo;
     console.log("Start line timer for", lineTime);
     this.playTimer = timer(lineTime);
     this.playSubscription = this.playTimer.subscribe((n) => {
@@ -107,16 +109,19 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
   private getSongData() {
     this.songsClient.getSongData(this.songId)
       .then(songData => {
-        this.extractCueSheetData(songData);
+          this.extractCueSheetData(songData);
+          this.tempo = songData.tempo as number;
+          this.beatsPerStaff = songData.beatsPerStaff as number;
       });
   }
 
     private extractCueSheetData(songData) {
-        this.cueSheetData = { title: songData.title, composer: songData.composer, key: songData.key, err: null };
-
-        // TODO Correct existing test data errors
-        // TODO Add new (simpler) test data
-        // TODO Complete existing test data
+        this.cueSheetData = {
+            title: songData.title,
+            composer: songData.composer,
+            key: songData.key,
+            err: null
+        };
 
         const lyricStanzas = new Array();
         for (var lyricStanza of songData.lyrics) {
