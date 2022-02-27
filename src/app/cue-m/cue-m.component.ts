@@ -4,116 +4,116 @@ import { SongsApiClientService } from '../songs-api-client.service';
 import { Observable, timer, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-cue-m',
-  templateUrl: './cue-m.component.html',
-  styleUrls: ['./cue-m.component.css']
+    selector: 'app-cue-m',
+    templateUrl: './cue-m.component.html',
+    styleUrls: ['./cue-m.component.css']
 })
 export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('cueView') viewElement: ElementRef;
+    @ViewChild('cueView') viewElement: ElementRef;
 
-  songId: string;
-  cueSheetData: any = {
-    staves: [{
-      lyricLine: ["This", "is", "a", "test"],
-      chordLine: ["A", "D", "G", "X"]
-    }]
-  };
-  currentStaves: any;
+    songId: string;
+    cueSheetData: any = {
+        staves: [{
+            lyricLine: ["This", "is", "a", "test"],
+            chordLine: ["A", "D", "G", "X"]
+        }]
+    };
+    currentStaves: any;
 
-  playing: boolean = false;
-  fullScreen: boolean = false;
-  tempo: number = 120.0;
-    
-  private beatsPerStaff: number = 16; // Arbitrary default
-  private currentLine: number = 0;
-  private playTimer: Observable<number>;
-  private playSubscription: Subscription;
+    playing: boolean = false;
+    fullScreen: boolean = false;
+    tempo: number = 120.0;
 
-  constructor(private activatedRoute: ActivatedRoute,
-    private songsClient: SongsApiClientService) { }
+    private beatsPerStaff: number = 16; // Arbitrary default
+    private currentLine: number = 0;
+    private playTimer: Observable<number>;
+    private playSubscription: Subscription;
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      this.songId = params['songId'];
-      this.getSongData();
-    });
-  }
+    constructor(private activatedRoute: ActivatedRoute,
+        private songsClient: SongsApiClientService) { }
 
-  ngAfterViewInit(): void {
-    this.enterFullScreen();
-  }
+    ngOnInit(): void {
+        this.activatedRoute.params.subscribe(params => {
+            this.songId = params['songId'];
+            this.getSongData();
+        });
+    }
 
-  ngOnDestroy(): void {
-    if (this.playSubscription) this.playSubscription.unsubscribe();
-  }
+    ngAfterViewInit(): void {
+        this.enterFullScreen();
+    }
 
-  public enterFullScreen() {
-    let fs = this.viewElement.nativeElement.requestFullscreen();
-    fs.then(() => this.lockLandscape());
-    this.fullScreen = true;
-  }
+    ngOnDestroy(): void {
+        if (this.playSubscription) this.playSubscription.unsubscribe();
+    }
 
-  public leaveFullScreen() {
-    let nfs = document.exitFullscreen();
-    nfs.then(() => this.unlockOrientation());
-    this.fullScreen = false;
-  }
+    public enterFullScreen() {
+        let fs = this.viewElement.nativeElement.requestFullscreen();
+        fs.then(() => this.lockLandscape());
+        this.fullScreen = true;
+    }
 
-  private lockLandscape() {
-    console.log("Attempt to lock landscape orientation");
-    screen.orientation.lock('landscape');
-  }
+    public leaveFullScreen() {
+        let nfs = document.exitFullscreen();
+        nfs.then(() => this.unlockOrientation());
+        this.fullScreen = false;
+    }
 
-  private unlockOrientation() {
-    console.log("Attempt to unlock orientation");
-    screen.orientation.unlock();
-  }
+    private lockLandscape() {
+        console.log("Attempt to lock landscape orientation");
+        screen.orientation.lock('landscape');
+    }
 
-  public togglePlaying() {
-    this.playing = !this.playing;
-    if (this.playing) this.playLine();
-    else this.playSubscription.unsubscribe();
-  }
+    private unlockOrientation() {
+        console.log("Attempt to unlock orientation");
+        screen.orientation.unlock();
+    }
 
-  public skipForward() {
-    this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 3);
-    this.scroll();
-  }
+    public togglePlaying() {
+        this.playing = !this.playing;
+        if (this.playing) this.playLine();
+        else this.playSubscription.unsubscribe();
+    }
 
-  public skipBackward() {
-    this.currentLine = Math.max(0, this.currentLine - 3);
-    this.scroll();
-  }
+    public skipForward() {
+        this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 3);
+        this.scroll();
+    }
 
-  public staffBars(staff) {
-    return Math.max(staff.lyricLine.length, staff.chordLine.length);
-  }
+    public skipBackward() {
+        this.currentLine = Math.max(0, this.currentLine - 3);
+        this.scroll();
+    }
 
-  private scroll() {
-    this.currentStaves = this.cueSheetData.staves.slice(this.currentLine, this.currentLine + 3);
-    if (this.playing && (this.currentLine + 3 < this.cueSheetData.staves.length)) this.playLine();
-  }
+    public staffBars(staff) {
+        return Math.max(staff.lyricLine.length, staff.chordLine.length);
+    }
+
+    private scroll() {
+        this.currentStaves = this.cueSheetData.staves.slice(this.currentLine, this.currentLine + 3);
+        if (this.playing && (this.currentLine + 3 < this.cueSheetData.staves.length)) this.playLine();
+    }
 
     private playLine() {
-    var lineTime = 60000.0 * this.beatsPerStaff / this.tempo;
-    console.log("Start line timer for", lineTime);
-    this.playTimer = timer(lineTime);
-    this.playSubscription = this.playTimer.subscribe((n) => {
-      this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 1);
-      console.log("Line timer done, advanced to line", this.currentLine);
-      this.scroll();
-    });
-  }
+        var lineTime = 60000.0 * this.beatsPerStaff / this.tempo;
+        console.log("Start line timer for", lineTime);
+        this.playTimer = timer(lineTime);
+        this.playSubscription = this.playTimer.subscribe((n) => {
+            this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 1);
+            console.log("Line timer done, advanced to line", this.currentLine);
+            this.scroll();
+        });
+    }
 
-  private getSongData() {
-    this.songsClient.getSongData(this.songId)
-      .then(songData => {
-          this.extractCueSheetData(songData);
-          this.tempo = songData.tempo as number;
-          this.beatsPerStaff = songData.beatsPerStaff as number;
-      });
-  }
+    private getSongData() {
+        this.songsClient.getSongData(this.songId)
+            .then(songData => {
+                this.extractCueSheetData(songData);
+                this.tempo = songData.tempo as number;
+                this.beatsPerStaff = songData.beatsPerStaff as number;
+            });
+    }
 
     private extractCueSheetData(songData) {
         this.cueSheetData = {
@@ -239,7 +239,6 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
             for (let lyrStanza of lyricStanzas) {
                 if (lyrStanza.type === cueStanza.type && lyrStanza.number === cueStanza.lyricNumber) stzLyricLines = lyrStanza.lyricLines;
             }
-            if (!stzLyricLines) console.log("No lyric lines for cueStanza", cueStanza);
             for (let chdStanza of chordStanzas) {
                 console.log("Matching chord stanza", chdStanza);
                 if (chdStanza.type == cueStanza.type &&
@@ -248,17 +247,42 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
                     stzChordLines = chdStanza.chordLines;
                 }
             }
-            if (!stzChordLines) console.log("No chord lines for cueStanza", cueStanza);
-      // Catch error if either is not set
-      stzLyricLines.forEach((val, inx, arry) => {
+            if (!stzLyricLines) {
+                console.log("No lyric lines for cueStanza", cueStanza);
+                this.cueSheetData.err = true;
+                return;
+            }
+            if (!stzChordLines) {
+                console.log("No chord lines for cueStanza", cueStanza);
+                this.cueSheetData.err = true;
+                return;
+            }
+            stzLyricLines.forEach((lyricLine, lineInx, arry) => {
+                // Parse lines to bars
+                var chordLine = stzChordLines[lineInx];
+                var lineBars = new Array();
+                if (lyricLine.length == chordLine.length) {
+                    lyricLine.forEach((barLyric, barInx, arry) => {
+                        lineBars.push({
+                            lyric: barLyric,
+                            chords: chordLine[barInx]
+                        });
+                    });
+                    staves.push({
+                        bars: lineBars
+                    });
+                }
+                else {
+                    console.log("Lyric/chord length mismatch in line " + (lineInx + 1) + " of cueStanza", cueStanza);
+                    this.cueSheetData.err = true;
+                    return;
+                }
+            });
+        }
+        this.cueSheetData.staves = staves;
+        console.log("Dereference to staves complete, count", staves.length);
+        this.scroll();
 
-        staves.push({ lyricLine: val, chordLine: stzChordLines[inx] });
-      });
-      this.cueSheetData.staves = staves;
     }
-    console.log("Dereference to staves complete, count", staves.length);
-    this.scroll();
-
-  }
 
 }

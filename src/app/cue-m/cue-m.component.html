@@ -1,19 +1,22 @@
 <main #cueView style="background-color: #FFFFFF;">
   <div style="background-color: #FFFFFF; height: 100%; width: 100%">
-    <div style="display: inline-block;">
+    <div style="display: inline-block; margin-right: 56px;">
       <h1 *ngIf="cueSheetData.err">ERROR!</h1>
       <!--margin-right: 56px;-->
       <div style="display: inline-block;">
         <div *ngFor="let staff of currentStaves">
-          <div class="line" style="grid-template-columns: repeat({{staffBars(staff)}}, auto);">
-            <!--class="chord"-->
-            <div style="font-size: 24px; font-weight: bold;" *ngFor="let chord of staff.chordLine">
-              {{chord | trimChords}}
-            </div>
-            <!--class="lyric"-->
-            <div style="font-size: 28px;" *ngFor="let word of staff.lyricLine">
-              {{word}} <span *ngIf="word.slice(-1) != '-'">&nbsp;</span>
-            </div>
+          <div class="line" style="display: block; text-indent: -5em; padding-left: 5em;">
+              <!--style="grid-template-columns: repeat({{staff.bars.length}}, auto);">-->
+              <div style="display: inline-block; text-indent: 0;" *ngFor="let bar of staff.bars">
+                  <!--class="chord"-->
+                  <div style="font-size: 24px; font-weight: bold; display: block;">
+                      {{bar.chords | trimChords}} <span *ngIf="bar.chords === 'X'">&nbsp;</span>
+                  </div>
+                  <!--class="lyric"-->
+                  <div style="font-size: 28px; display: block;">
+                      {{bar.lyric}} <span *ngIf="bar.lyric.slice(-1) != '-'">&nbsp;</span>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
