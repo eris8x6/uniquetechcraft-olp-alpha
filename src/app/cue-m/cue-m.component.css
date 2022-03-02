@@ -16,3 +16,9 @@
 .line .lyric2 {
   font-size: 12px;
 }
+
+.tempo-active {
+    position: fixed;
+    top: 1em;
+    left: calc(50% - 1em);
+}

@@ -19,12 +19,12 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
             chordLine: ["A", "D", "G", "X"]
         }]
     };
-    currentStaves: any;
 
     playing: boolean = false;
     fullScreen: boolean = false;
     tempo: number = 120.0;
-
+    tempoClass: string = null;
+    
     private beatsPerStaff: number = 16; // Arbitrary default
     private currentLine: number = 0;
     private playTimer: Observable<number>;
@@ -77,7 +77,7 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public skipForward() {
-        this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 3);
+        this.currentLine = Math.min(this.cueSheetData.staves.length - 1, this.currentLine + 3);
         this.scroll();
     }
 
@@ -86,13 +86,12 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
         this.scroll();
     }
 
-    public staffBars(staff) {
-        return Math.max(staff.lyricLine.length, staff.chordLine.length);
-    }
-
     private scroll() {
-        this.currentStaves = this.cueSheetData.staves.slice(this.currentLine, this.currentLine + 3);
-        if (this.playing && (this.currentLine + 3 < this.cueSheetData.staves.length)) this.playLine();
+        document.getElementById("staff" + Math.max(0, this.currentLine - 1)).scrollIntoView({ behavior: "smooth" });
+        if (this.playing) {
+            if (this.currentLine < this.cueSheetData.staves.length) this.playLine();
+            else this.togglePlaying();
+        }
     }
 
     private playLine() {
@@ -100,7 +99,7 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("Start line timer for", lineTime);
         this.playTimer = timer(lineTime);
         this.playSubscription = this.playTimer.subscribe((n) => {
-            this.currentLine = Math.min(this.cueSheetData.staves.length - 3, this.currentLine + 1);
+            this.currentLine = this.currentLine + 1;
             console.log("Line timer done, advanced to line", this.currentLine);
             this.scroll();
         });
@@ -281,7 +280,6 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.cueSheetData.staves = staves;
         console.log("Dereference to staves complete, count", staves.length);
-        this.scroll();
 
     }
 

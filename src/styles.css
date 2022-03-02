@@ -1090,4 +1090,22 @@ a {
   font-weight: bold;
 }
 
+.tempo-active {
+    position: fixed;
+    top: 1em;
+    left: calc(50% - 1em);
+    background-color: white;
+    opacity: 1.0;
+    z-index: 1;
+}
+
+.cue-nav-bar {
+    width: 56px;
+    display: inline-block;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    color: #BF009F;
+}
+
 /*# sourceMappingURL=style.css.map */
