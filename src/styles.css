@@ -1090,6 +1090,10 @@ a {
   font-weight: bold;
 }
 
+main {
+    overflow-y: scroll;
+}
+
 .tempo-active {
     position: fixed;
     top: 1em;
