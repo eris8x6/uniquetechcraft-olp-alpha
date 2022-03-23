@@ -1,0 +1,105 @@
+{
+  "title": "The Maker",
+  "composer": "Daniel Lanois",
+  "lyricist": null,
+  "key": "G maj",
+  "beatsPerStaff": 16,
+  "tempo": 86,
+  "lyrics": [
+    {
+      "type": "intro",
+      "number": 1,
+      "text": "---"
+    },
+    {
+      "type": "verse",
+      "number": 1,
+      "text": "Oh, ^oh deep ^water,/Black and cold ^like the ^night/I ^stand with arms wide ^open, I've ^run a twisted ^line/I'm a ^stranger in the ^eyes of the ^Maker"
+    },
+    {
+      "type": "verse",
+      "number": 2,
+      "text": "I ^could not see for the ^fog in my ^eyes/I ^could not feel for the ^fear in my ^life/And from a- ^cross the great di- ^vide, In the ^distance I saw a ^light/Jean Bap- ^tiste walking to me ^with the ^Maker"
+    },
+    {
+      "type": "bridge",
+      "number": 1,
+      "text": "My ^body is ^bent and ^broken by a ^long and ^dangerous ^sleep/I can't ^work the fields of ^Abraham and ^turn my head ^away/I'm ^not a ^stranger in the ^hands of the ^Maker"
+    },
+    {
+      "type": "verse",
+      "number": 3,
+      "text": "Brother ^John, have you ^seen the homeless ^daughters/Standing ^there with ^broken ^wings/I have ^seen the ^flaming swords ^there over east of ^Eden/Burning in the ^eyes of the ^Maker/Burning in the ^eyes of the ^Maker/Burning in the ^eyes of the ^Maker"
+    },
+    {
+      "type": "tag",
+      "number": 1,
+      "text": "Oh, river ^rise from your ^sleep"
+    }
+  ],
+  "chords": [
+    {
+      "type": "intro",
+      "number": 1,
+      "value": "Single_notes_G2-F3-G3_to_Gmaj_riff"
+    },
+    {
+      "type": "verse",
+      "number": 1,
+      "value": "Em D G/Cmaj7 D G/X C D G C/X Am7 D G"
+    },
+    {
+      "type": "verse",
+      "number": 2,
+      "value": "X Cmaj7 D G/X Cmaj7 D G/X C D G C/X Am7 D G"
+    },
+    {
+      "type": "bridge",
+      "number": 1,
+      "value": "X Cmaj7 G(C) G Cmaj7 D G/X C D G C/X Cmaj7 C D G"
+    },
+    {
+      "type": "verse",
+      "number": 3,
+      "value": "X Cmaj7 D G/X Cmaj7 D G/X C D G C/Am7 D G/|4/|4"
+    },
+    {
+      "type": "tag",
+      "number": 1,
+      "value": "G G G"
+    }
+  ],
+  "arrangement": [
+    {
+      "type": "intro",
+      "lyricNumber": 1,
+      "chordNumber": 1
+    },
+    {
+      "type": "verse",
+      "lyricNumber": 1,
+      "chordNumber": 1
+    },
+    {
+      "type": "verse",
+      "lyricNumber": 2,
+      "chordNumber": 2
+    },
+    {
+      "type": "bridge",
+      "lyricNumber": 1,
+      "chordNumber": 1
+    },
+    {
+      "type": "verse",
+      "lyricNumber": 3,
+      "chordNumber": 3
+    },
+    {
+      "type": "tag",
+      "lyricNumber": 1,
+      "chordNumber": 1
+    }
+  ]
+
+}

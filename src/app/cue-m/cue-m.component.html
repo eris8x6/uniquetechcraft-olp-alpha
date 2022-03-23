@@ -1,46 +1,63 @@
 <main #cueView style="background-color: #FFFFFF;">
-  <div style="background-color: #FFFFFF; height: 100%; width: 100%">
-    <div style="display: inline-block; margin-right: 56px;">
-      <h1 *ngIf="cueSheetData.err">ERROR!</h1>
-      <!--margin-right: 56px;-->
-      <div style="display: inline-block;">
-        <div *ngFor="let staff of cueSheetData.staves; index as staffNumber;">
-          <div id="{{'staff'+staffNumber}}" class="line" style="display: block; text-indent: -5em; padding-left: 5em;">
-              <!--style="grid-template-columns: repeat({{staff.bars.length}}, auto);">-->
-              <div style="display: inline-block; text-indent: 0;" *ngFor="let bar of staff.bars">
-                  <!--class="chord"-->
-                  <div style="font-size: 24px; font-weight: bold; display: block;">
-                      {{bar.chords | trimChords}} <span *ngIf="bar.chords === 'X'">&nbsp;</span>
-                  </div>
-                  <!--class="lyric"-->
-                  <div style="font-size: 28px; display: block;">
-                      {{bar.lyric}} <span *ngIf="bar.lyric.slice(-1) != '-'">&nbsp;</span>
-                  </div>
-              </div>
-          </div>
+    <div style="background-color: #FFFFFF; height: 100%; width: 100%">
+        <div style="display: inline-block; margin-right: 56px;">
+            <h1 *ngIf="cueSheetData.err">ERROR!</h1>
+            <!--margin-right: 56px;-->
+            <div style="min-height: 45vh">&nbsp;</div>
+            <div style="display: inline-block;">
+                <div *ngFor="let staff of cueSheetData.staves; index as staffNumber;">
+                    <div id="{{'staff'+staffNumber}}" class="line" style="display: block; text-indent: -5em; padding-left: 5em;">
+                        <div *ngIf="isCurrent(staffNumber)">
+                            <!--style="grid-template-columns: repeat({{staff.bars.length}}, auto);">-->
+                            <div style="display: inline-block; text-indent: 0;" *ngFor="let bar of staff.bars">
+                                <!--class="chord"-->
+                                <div style="font-size: 28px; font-weight: bold; display: block;">
+                                    {{bar.chords | trimChords}} <span *ngIf="bar.chords === 'X'">&nbsp;</span>
+                                </div>
+                                <!--class="lyric"-->
+                                <div style="font-size: 32px; margin-top: -0.2em; margin-bottom: 0.2em; display: block;">
+                                    {{bar.lyric}} <span *ngIf="bar.lyric.slice(-1) != '-'">&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!isCurrent(staffNumber)">
+                            <!--style="grid-template-columns: repeat({{staff.bars.length}}, auto);">-->
+                            <div style="display: inline-block; text-indent: 0;" *ngFor="let bar of staff.bars">
+                                <!--class="chord"-->
+                                <div style="font-size: 20px; font-weight: bold; display: block;">
+                                    {{bar.chords | trimChords}} <span *ngIf="bar.chords === 'X'">&nbsp;</span>
+                                </div>
+                                <!--class="lyric"-->
+                                <div style="font-size: 24px; margin-top: -0.2em; margin-bottom: 0.2em; display: block;">
+                                    {{bar.lyric}} <span *ngIf="bar.lyric.slice(-1) != '-'">&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="min-height: 45vh">&nbsp;</div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="cue-nav-bar">
-      <div ngClass="{{tempoClass}}">
-          <span>Tempo: </span>
-          <input type="number" (focus)="tempoClass='tempo-active';" (blur)="tempoClass=null" [(ngModel)]="tempo">
-      </div>
-      <button *ngIf="!fullScreen" (click)="enterFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen</button>
-      <button *ngIf="fullScreen" (click)="leaveFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen_exit</button>
-      <button class="mdc-icon-button" (click)="leaveFullScreen();" style="display: block;">
+        <div class="cue-nav-bar">
+            <div ngClass="{{tempoClass}}">
+                <span>Tempo: </span>
+                <input type="number" (focus)="tempoClass='tempo-active';" (blur)="tempoClass=null" [(ngModel)]="tempo">
+            </div>
+            <button *ngIf="!fullScreen" (click)="enterFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen</button>
+            <button *ngIf="fullScreen" (click)="leaveFullScreen();" class="material-icons mdc-icon-button" style="display: block;">fullscreen_exit</button>
+            <button class="mdc-icon-button" (click)="leaveFullScreen();" style="display: block;">
 
-        <!--TODO - following needs to use routerLink: routerLink="./song/{{songId}}" -->
-          <a style="text-decoration: none; color: inherit; fill: inherit;" class="material-icons" routerLink="/song/{{songId}}">
-            stop
-          </a>
-        </button>
-        <button (click)="skipBackward();" class="material-icons mdc-icon-button" style="display: block;">fast_rewind</button>
-        <button (click)="togglePlaying();" class="material-icons mdc-icon-button" style="display: block;">
-          <span *ngIf="!playing">play_arrow</span>
-          <span *ngIf="playing">pause</span>
-        </button>
-        <button (click)="skipForward();" class="material-icons mdc-icon-button" style="display: block;">fast_forward</button>
-      </div>
+                <!--TODO - following needs to use routerLink: routerLink="./song/{{songId}}" -->
+                <a style="text-decoration: none; color: inherit; fill: inherit;" class="material-icons" routerLink="/song/{{songId}}">
+                    stop
+                </a>
+            </button>
+            <button (click)="skipBackward();" class="material-icons mdc-icon-button" style="display: block;">fast_rewind</button>
+            <button (click)="togglePlaying();" class="material-icons mdc-icon-button" style="display: block;">
+                <span *ngIf="!playing">play_arrow</span>
+                <span *ngIf="playing">pause</span>
+            </button>
+            <button (click)="skipForward();" class="material-icons mdc-icon-button" style="display: block;">fast_forward</button>
+        </div>
     </div>
-  </main>
+</main>

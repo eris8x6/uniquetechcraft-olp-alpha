@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SongsApiClientService } from '../songs-api-client.service';
 import { Observable, timer, Subscription } from 'rxjs';
@@ -70,6 +70,8 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
         screen.orientation.unlock();
     }
 
+    public isCurrent(staffIndex: number): boolean { return staffIndex == this.currentLine; }
+
     public togglePlaying() {
         this.playing = !this.playing;
         if (this.playing) this.playLine();
@@ -87,7 +89,8 @@ export class CueMComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private scroll() {
-        document.getElementById("staff" + Math.max(0, this.currentLine - 1)).scrollIntoView({ behavior: "smooth" });
+        let currentStaffEl: HTMLElement = document.getElementById("staff" + this.currentLine);
+        if (currentStaffEl) currentStaffEl.scrollIntoView({ behavior: "smooth", block: "center" });
         if (this.playing) {
             if (this.currentLine < this.cueSheetData.staves.length) this.playLine();
             else this.togglePlaying();
